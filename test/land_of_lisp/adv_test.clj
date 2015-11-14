@@ -23,3 +23,9 @@
 (deftest describe-objects-test
   (is (= (describe-objects 'living-room objects object-locations)
          "you see a whiskey on the floor. you see a bucket on the floor.")))
+
+(deftest look-test
+  (is (= (look)
+         (str "you are in the living room. a wizard is snoring loudly on the couch. "
+           "there is a door going west from here. there is a ladder going upstair from here. "
+           "you see a whiskey on the floor. you see a bucket on the floor."))))

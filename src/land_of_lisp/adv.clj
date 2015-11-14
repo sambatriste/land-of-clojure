@@ -1,17 +1,15 @@
 (ns land-of-lisp.adv)
 
 
-
-
 (def nodes '{living-room (you are in the living room. a wizard is snoring loudly on the couch.)
-            garden      (you are in a beautiful garden. there is a well in front of you.)
-            attic       (you are in the attic. there is a giant welding torch in the corner.)})
+             garden      (you are in a beautiful garden. there is a well in front of you.)
+             attic       (you are in the attic. there is a giant welding torch in the corner.)})
 
 (def edges
   '{living-room [[garden west door]
                  [attic upstair ladder]]
-   garden      [[living-room east door]]
-   attic       [[living-room downstair ladder]]})
+    garden      [[living-room east door]]
+    attic       [[living-room downstair ladder]]})
 
 (def objects '[whiskey bucket frog chain])
 (def object-locations
@@ -19,6 +17,9 @@
     bucket  living-room
     chain   garden
     frog    garden})
+
+(def location 'living-room)
+
 (defn- conc [lst] (clojure.string/join " " lst))
 
 (defn- stringify [lst] (conc (map name lst)))
@@ -44,3 +45,8 @@
 (defn describe-objects [loc objs obj-loc]
   (letfn [(describe-obj [obj] (stringify `(you see a ~obj on the floor.)))]
     (conc (map describe-obj (objects-at loc objs obj-loc)))))
+
+(defn look []
+  (conc [(describe-location location nodes)
+         (describe-paths location edges)
+         (describe-objects location objects object-locations)]))
