@@ -25,7 +25,29 @@
          "you see a whiskey on the floor. you see a bucket on the floor.")))
 
 (deftest look-test
+  (set-location 'living-room)
   (is (= (look)
-         (str "you are in the living room. a wizard is snoring loudly on the couch. "
-           "there is a door going west from here. there is a ladder going upstair from here. "
-           "you see a whiskey on the floor. you see a bucket on the floor."))))
+         (str "you are in the living room. "
+              "a wizard is snoring loudly on the couch. "
+              "there is a door going west from here. "
+              "there is a ladder going upstair from here. "
+              "you see a whiskey on the floor. "
+              "you see a bucket on the floor."))))
+
+(deftest set-location-test
+  (set-location 'west)
+  (is (= (current-location) 'west)))
+
+(deftest current-edge-test
+  (set-location 'living-room)
+  (is (= (current-edge) '[[garden west door]
+                         [attic upstair ladder]]))
+  )
+(deftest walk-test
+  (set-location 'living-room)
+  (is (= (walk 'west)
+         (str "you are in a beautiful garden. "
+              "there is a well in front of you. "
+              "there is a door going east from here. "
+              "you see a frog on the floor. "
+              "you see a chain on the floor."))))

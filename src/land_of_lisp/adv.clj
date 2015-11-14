@@ -18,7 +18,7 @@
     chain   garden
     frog    garden})
 
-(def location 'living-room)
+(def location (atom 'living-room) )
 
 (defn- conc [lst] (clojure.string/join " " lst))
 
@@ -46,7 +46,28 @@
   (letfn [(describe-obj [obj] (stringify `(you see a ~obj on the floor.)))]
     (conc (map describe-obj (objects-at loc objs obj-loc)))))
 
+(defn current-location []
+  (deref location))
 (defn look []
-  (conc [(describe-location location nodes)
-         (describe-paths location edges)
-         (describe-objects location objects object-locations)]))
+  (let [loc (current-location)]
+    (conc [(describe-location loc nodes)
+           (describe-paths loc edges)
+           (describe-objects loc objects object-locations)])))
+
+
+(defn current-edge [] (get edges (current-location)))
+(defn- find-first [pred col]
+  (first (filter pred col)))
+
+(defn set-location [loc] (reset! location loc))
+
+(defn get-next-egde [direction]
+  (find-first #(= direction (nth % 1)) (current-edge)))
+
+(defn walk [direction]
+  (let [next (get-next-egde direction)]
+    (if next
+      (do
+        (set-location (first next))
+        (look))
+      '(you cannot ge that way.))))
