@@ -20,22 +20,18 @@
 
 (def location (atom 'living-room) )
 
-(defn- conc [lst] (clojure.string/join " " lst))
-
-(defn- stringify [lst] (conc (map name lst)))
-
 (defn describe-location
   [loc nodes]
-  (stringify (get nodes loc)))
+  (get nodes loc))
 
 (defn describe-path
   [edge]
-  (stringify `(there is a ~(nth edge 2) going ~(nth edge 1) from here.)))
+  `(there is a ~(nth edge 2) going ~(nth edge 1) from here.))
 
 
 (defn describe-paths
   [location edges]
-  (conc (map describe-path (get edges location))))
+  (map describe-path (get edges location)))
 
 
 (defn objects-at [loc objs obj-locs]
@@ -43,29 +39,28 @@
     (filter at-loc? objs)))
 
 (defn describe-objects [loc objs obj-loc]
-  (letfn [(describe-obj [obj] (stringify `(you see a ~obj on the floor.)))]
-    (conc (map describe-obj (objects-at loc objs obj-loc)))))
+  (letfn [(describe-obj [obj] `(you see a ~obj on the floor.))]
+    (map describe-obj (objects-at loc objs obj-loc))))
 
-(defn current-location []
+(defn get-location []
   (deref location))
 (defn look []
-  (let [loc (current-location)]
-    (conc [(describe-location loc nodes)
-           (describe-paths loc edges)
-           (describe-objects loc objects object-locations)])))
+  (let [loc (get-location)]
+    [(describe-location loc nodes)
+     (describe-paths loc edges)
+     (describe-objects loc objects object-locations)]))
 
-
-(defn current-edge [] (get edges (current-location)))
 (defn- find-first [pred col]
   (first (filter pred col)))
 
-(defn set-location [loc] (reset! location loc))
+(defn set-location [new-location] (reset! location new-location))
 
-(defn get-next-egde [direction]
-  (find-first #(= direction (nth % 1)) (current-edge)))
+(defn edge-of [direction]
+  (let [edge (get edges (get-location))]
+    (find-first #(= direction (nth % 1)) edge)))
 
 (defn walk [direction]
-  (let [next (get-next-egde direction)]
+  (let [next (edge-of direction)]
     (if next
       (do
         (set-location (first next))
