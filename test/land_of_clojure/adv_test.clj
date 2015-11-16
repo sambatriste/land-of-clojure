@@ -1,6 +1,6 @@
-(ns land-of-lisp.adv_test
+(ns land-of-clojure.adv_test
   (:require [clojure.test :refer :all]
-            [land-of-lisp.adv :refer :all])
+            [land-of-clojure.adv :refer :all])
   (:import (clojure.lang Named)))
 
 (defn- simplify [e]

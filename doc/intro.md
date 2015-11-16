@@ -1,3 +1,4 @@
-# Introduction to land-of-lisp
+# Introduction to land-of-clojure
 
 TODO: write [great documentation](http://jacobian.org/writing/what-to-write/)
+
