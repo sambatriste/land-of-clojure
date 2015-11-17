@@ -4,8 +4,7 @@
   "条件に合致する最初の要素を取得する。"
   (first (filter pred col)))
 
-(defn my-assoc
-  [key alist]
+(defn my-assoc [key alist]
   "Common LISPのassoc代替。alistからkeyに対応するvalueを取得する。"
   (let [first-entry (find-first #(= (first %) key) alist)
         val (rest first-entry)]
@@ -24,14 +23,17 @@
 
 (def ^:dynamic *objects* '(whiskey bucket frog chain))
 
+;; オブジェクト配置場所の初期値
 (def initial-object-location '((whiskey living-room)
                                 (bucket living-room)
                                 (chain garden)
                                 (frog garden)))
+
 (def ^:dynamic *object-locations* (atom initial-object-location))
 
 (defn current-object-locations [] (deref *object-locations*))
 
+;; 場所の初期値
 (def initial-location 'living-room)
 (def ^:dynamic *location* (atom initial-location))
 
@@ -83,3 +85,6 @@
        `(you are now carrying the ~obj))]
     (cond (can-pickup? object) (do-pickup object)
           :else '(you cannot get that.))))
+
+(defn inventory []
+  (cons 'item- (objects-at 'body *objects* (current-object-locations))))
