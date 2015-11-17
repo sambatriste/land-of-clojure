@@ -4,7 +4,15 @@
             [clojure.string :refer [join]])
   (:import (clojure.lang Named)))
 
+(defn- init []
+  (reset! *object-locations* initial-object-location)
+  (reset! *location* initial-location))
 
+(defn my-fixture [f]
+  (init)
+  (f)
+  (init))
+(use-fixtures :each my-fixture)
 (defn- simplify [e]
   "シンボルを名前に変換する。hoge/fuga -> 'fuga'"
   (if (instance? Named e) (name e) e))
@@ -30,15 +38,14 @@
            "there is a ladder going upstair from here."))))
 
 (deftest objects-at-test
-  (is (= (objects-at 'living-room *objects* *object-locations*)
+  (is (= (objects-at 'living-room *objects* (current-object-locations))
          '(whiskey bucket))))
 
 (deftest describe-objects-test
-  (is (= (stringify (describe-objects 'living-room *objects* *object-locations*))
+  (is (= (stringify (describe-objects 'living-room *objects* (current-object-locations)))
          "you see a whiskey on the floor. you see a bucket on the floor.")))
 
 (deftest look-test
-  (reset! *location* 'living-room)
   (is (= (stringify (look))
          (str "you are in the living room. "
               "a wizard is snoring loudly on the couch. "
@@ -48,7 +55,6 @@
               "you see a bucket on the floor."))))
 
 (deftest walk-test
-  (reset! *location* 'living-room)
   (is (= (stringify (walk 'west))
          (str "you are in a beautiful garden. "
               "there is a well in front of you. "
@@ -63,3 +69,11 @@
 (deftest stringify-test
   (is (= (join " " (map simplify (flatten '[[a aa bb] [cc d]]) ))  "a aa bb cc d"))
   (is (= (stringify '[[a aa bb] [cc 1]]) "a aa bb cc 1" )))
+
+(deftest pickup-test
+  (testing "pickup"
+    (is (= (stringify (pickup 'bucket))
+           "you are now carrying the bucket"))
+    (is (= (objects-at 'body *objects* (current-object-locations))
+           '(bucket)))))
+

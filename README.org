@@ -1,0 +1,8 @@
+* land-of-clojure
+
+Land Of LispをClojureで書きます。
+
+** License
+
+Distributed under the MIT License.
+

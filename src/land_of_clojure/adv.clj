@@ -24,24 +24,24 @@
 
 (def ^:dynamic *objects* '(whiskey bucket frog chain))
 
-(def ^:dynamic *object-locations*
-  '((whiskey living-room)
-     (bucket living-room)
-     (chain garden)
-     (frog garden)))
+(def initial-object-location '((whiskey living-room)
+                                (bucket living-room)
+                                (chain garden)
+                                (frog garden)))
+(def ^:dynamic *object-locations* (atom initial-object-location))
 
-(def ^:dynamic *location* (atom 'living-room))
+(defn current-object-locations [] (deref *object-locations*))
 
-(defn describe-location
-  [loc nodes]
+(def initial-location 'living-room)
+(def ^:dynamic *location* (atom initial-location))
+
+(defn describe-location [loc nodes]
   (my-assoc loc nodes))
 
-(defn describe-path
-  [edge]
+(defn describe-path [edge]
   `(there is a ~(nth edge 2) going ~(nth edge 1) from here.))
 
-(defn describe-paths
-  [location edges]
+(defn describe-paths [location edges]
   (map describe-path (my-assoc location edges)))
 
 (defn objects-at [loc objs obj-locs]
@@ -52,16 +52,17 @@
   (letfn [(describe-obj [obj] `(you see a ~obj on the floor.))]
     (map describe-obj (objects-at loc objs obj-loc))))
 
-
+(defn- current-location []
+  (deref *location*))
 (defn look []
-  (let [loc (deref *location*)]
+  (let [loc (current-location)]
     [(describe-location loc *nodes*)
      (describe-paths loc *edges*)
-     (describe-objects loc *objects* *object-locations*)]))
+     (describe-objects loc *objects* (current-object-locations))]))
 
 (defn- edge-of [direction]
   "*edges*から現在位置に対応するエントリを取得する。"
-  (let [edges-of-current-location (my-assoc (deref *location*) *edges*)]
+  (let [edges-of-current-location (my-assoc (current-location) *edges*)]
     (find-first #(= direction (nth % 1)) edges-of-current-location)))
 
 (defn walk [direction]
@@ -71,3 +72,14 @@
         (reset! *location* (first next))
         (look))
       '(you cannot ge that way.))))
+
+(defn pickup [object]
+  (letfn
+    [(can-pickup? [obj]
+       (some #(= obj %) (objects-at (current-location) *objects* (current-object-locations))))
+     (do-pickup [obj]
+       (let [new-object-location (cons (list obj 'body) (current-object-locations))]
+         (reset! *object-locations* new-object-location))
+       `(you are now carrying the ~obj))]
+    (cond (can-pickup? object) (do-pickup object)
+          :else '(you cannot get that.))))
