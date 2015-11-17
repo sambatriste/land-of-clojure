@@ -1,4 +1,4 @@
-(ns land-of-clojure.adv_test
+(ns land-of-clojure.adv-test
   (:require [clojure.test :refer :all]
             [land-of-clojure.adv :refer :all]
             [clojure.string :refer [join]])

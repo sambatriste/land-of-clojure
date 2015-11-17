@@ -61,7 +61,7 @@
 
 (defn- edge-of [direction]
   "*edges*から現在位置に対応するエントリを取得する。"
-  (let [edges-of-current-location (my-assoc (get-location) *edges*)]
+  (let [edges-of-current-location (my-assoc (deref *location*) *edges*)]
     (find-first #(= direction (nth % 1)) edges-of-current-location)))
 
 (defn walk [direction]
