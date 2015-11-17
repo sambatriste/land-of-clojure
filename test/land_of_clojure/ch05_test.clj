@@ -1,6 +1,6 @@
-(ns land-of-clojure.adv-test
+(ns land-of-clojure.ch05-test
   (:require [clojure.test :refer :all]
-            [land-of-clojure.adv :refer :all]
+            [land-of-clojure.ch05 :refer :all]
             [land-of-clojure.test-util :refer :all]))
 
 
