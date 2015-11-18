@@ -7,7 +7,10 @@
   (is (= (do-game-read "walk east")
          '(walk 'east))))
 
-(deftest fuga
-  (is (= (tweak-text "car. pen." true false)
-         "Car. Pen.")
-      ))
+(deftest tweak-test
+  (is (= (tweak-text "aaa! bbb? ccc. d" true false)
+         "Aaa! Bbb? Ccc. D")))
+
+(deftest allowed-command?-test
+  (is (= (allowed-command? '(hoge fuga)) false))
+  (is (= (allowed-command? '(walk west)) true)))

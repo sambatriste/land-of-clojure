@@ -1,8 +1,10 @@
 (ns land-of-clojure.ch06
-  (:require [clojure.string :refer [upper-case lower-case]]))
+  (:require [clojure.string :refer [upper-case lower-case]]
+            [land-of-clojure.ch05 :refer :all]
+            ))
 
-
-
+(defn exists? [e col]
+  (not (nil? (find-first #(= % e) col))))
 
 (defn do-game-read [raw-cmd]
   (let [cmd (read-string (str "(" raw-cmd ")"))]
@@ -14,7 +16,9 @@
 (def ^:dynamic *allowed-commands* '(look walk pickup inventory))
 
 (defn allowed-command? [sexp]
-  (contains? *allowed-commands* (first sexp)))
+  (let [cmd (first sexp)]
+    (exists? cmd *allowed-commands*)))
+
 (defn game-eval [sexp]
   (if (allowed-command? sexp)
     (eval sexp)
@@ -30,10 +34,17 @@
 (defn tweak-text [chars capitalize? literal?]
   (if (not (empty? chars))
     (let [chr (first chars)
-          rst (rest chars)]
-      (cond (= chr \space) (str chr (tweak-text rst capitalize? literal?))
-            (end-of-sentence? chr) (str chr (tweak-text rst true literal?))
-            (= chr \") (tweak-text rst capitalize? (not literal?))
-            literal? (str chr (tweak-text rest false literal?))
-            capitalize? (str (upper-case chr) (tweak-text rst false literal?))
-            :else (str (lower-case chr) (tweak-text rst false false))))))
+          rest-of-chars (rest chars)]
+      (cond
+        ;; スペース
+        (= chr \space) (str chr (tweak-text rest-of-chars capitalize? literal?))
+        ;; ! ? .
+        (end-of-sentence? chr) (str chr (tweak-text rest-of-chars true literal?))
+        ;; "
+        (= chr \") (tweak-text rest-of-chars capitalize? (not literal?))
+        ;; リテラル
+        literal? (str chr (tweak-text rest false literal?))
+        ;; 大文字
+        capitalize? (str (upper-case chr) (tweak-text rest-of-chars false literal?))
+        ;; その他
+        :else (str (lower-case chr) (tweak-text rest-of-chars false false))))))
