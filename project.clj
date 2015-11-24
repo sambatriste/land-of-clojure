@@ -3,4 +3,5 @@
   :url "https://github.com/sambatriste/land-of-clojure"
   :license {:name "MIT License"
             :url "https://opensource.org/licenses/MIT"}
-  :dependencies [[org.clojure/clojure "1.7.0"]])
+  :dependencies [[org.clojure/clojure "1.7.0"]]
+  :main land-of-clojure.ch06)

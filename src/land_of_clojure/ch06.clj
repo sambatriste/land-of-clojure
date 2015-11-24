@@ -1,8 +1,13 @@
 (ns land-of-clojure.ch06
-  (:require [clojure.string :refer [upper-case lower-case]]))
+  (:require [clojure.string :refer [upper-case lower-case split]]
+            [land-of-clojure.ch05 :refer :all]
+            [land-of-clojure.misc :refer :all]))
 
+(def ^:dynamic *allowed-commands* '(look walk pickup inventory))
 
-
+(defn string-trim [chars-to-delete target-string]
+  (letfn [(should-delete? [ch] (empty? (filter #(= % ch) chars-to-delete)))]
+    (apply str (filter should-delete? target-string)) ))
 
 (defn do-game-read [raw-cmd]
   (let [cmd (read-string (str "(" raw-cmd ")"))]
@@ -11,29 +16,49 @@
 
 (defn game-read [] (do-game-read (read-line)))
 
-(def ^:dynamic *allowed-commands* '(look walk pickup inventory))
+(defn symbolize [command-line]
+  (let [cmd (split command-line #" ")]
+    (map #(symbol 'land-of-clojure.ch05 %) cmd)))
 
 (defn allowed-command? [sexp]
-  (contains? *allowed-commands* (first sexp)))
-(defn game-eval [sexp]
-  (if (allowed-command? sexp)
-    (eval sexp)
-    '(i do not know that command.)))
+  (let [cmd (first sexp)]
+    (some? (find-first #(= % cmd) *allowed-commands*))))
 
-(defn end-of-sentence? [chr]
-  (case chr
-    \! true
-    \? true
-    \. true
-    false)
-  )
-(defn tweak-text [chars capitalize? literal?]
+(defn game-eval [command-line]
+  (let [sexp (symbolize command-line)]
+    (if (allowed-command? sexp)
+      (binding [*ns* 'land-of-clojure.ch05]
+        (eval (list sexp)))
+      '(i do not know that command.))))
+
+(defn eos? [ch]
+  (boolean (re-matches #"\(|!|\?|\." (str ch))))
+
+
+(defn tweak-text
+  [chars capitalize? literal?]
   (if (not (empty? chars))
-    (let [chr (first chars)
+    (let [ch (first chars)
           rst (rest chars)]
-      (cond (= chr \space) (str chr (tweak-text rst capitalize? literal?))
-            (end-of-sentence? chr) (str chr (tweak-text rst true literal?))
-            (= chr \") (tweak-text rst capitalize? (not literal?))
-            literal? (str chr (tweak-text rest false literal?))
-            capitalize? (str (upper-case chr) (tweak-text rst false literal?))
-            :else (str (lower-case chr) (tweak-text rst false false))))))
+      (cond (= ch \space) (str ch (tweak-text rst capitalize? literal?))
+            (eos? ch) (str ch (tweak-text rst true literal?))
+            (= ch \") (tweak-text rst capitalize? (not literal?))
+            literal? (str ch (tweak-text rst false literal?))
+            capitalize? (str (upper-case ch) (tweak-text rst false literal?))
+            :else (str (lower-case ch) (tweak-text rst false false))))))
+
+(defn game-print [lst]
+  (let [txt (tweak-text (stringify lst) true false)]
+    (println txt)
+    txt))
+
+(defn game-repl []
+  (let [command-line (game-read)]
+    (if (not (= (first command-line) 'quit))
+      (game-print (game-eval command-line))
+      (game-repl))))
+
+(defn -main [& args]
+  (println "input command.")
+  (game-repl))
+

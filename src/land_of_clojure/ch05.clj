@@ -1,6 +1,6 @@
 (ns land-of-clojure.ch05)
 
-(defn- find-first [pred col]
+(defn find-first [pred col]
   "条件に合致する最初の要素を取得する。"
   (first (filter pred col)))
 
