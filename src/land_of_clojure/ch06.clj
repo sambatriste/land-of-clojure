@@ -5,6 +5,10 @@
 
 (def ^:dynamic *allowed-commands* '(look walk pickup inventory))
 
+(defn exists? [e col]
+  (not (nil? (find-first #(= % e) col))))
+
+
 (defn string-trim [chars-to-delete target-string]
   (letfn [(should-delete? [ch] (empty? (filter #(= % ch) chars-to-delete)))]
     (apply str (filter should-delete? target-string)) ))
