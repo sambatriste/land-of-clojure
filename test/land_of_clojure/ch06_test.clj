@@ -17,8 +17,7 @@
 
 (deftest stringify-test-a
   (is (= (stringify '(not only does this sentence hava a "comma," it also mentions the "iPad."))
-         "not only does this sentence hava a \"comma,\" it also mentions the \"iPad.\""))
-  )
+         "not only does this sentence hava a \"comma,\" it also mentions the \"iPad.\"")))
 (deftest game-print-test
   (is (= (game-print '(" iPad. "))
          " iPad. "))
@@ -27,6 +26,6 @@
 
 (deftest symbolize-test
   (is (= (symbolize "look")
-         '(look))))
+         '(land-of-clojure.ch05/look))))
 ;(deftest aaa
 ;  (is (= (game-eval "look") "aaa")) )

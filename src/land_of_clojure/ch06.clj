@@ -21,8 +21,9 @@
 (defn game-read [] (do-game-read (read-line)))
 
 (defn symbolize [command-line]
-  (let [cmd (split command-line #" ")]
-    (map #(symbol 'land-of-clojure.ch05 %) cmd)))
+  (let [cmd (split command-line #" ")
+        namespace (name 'land-of-clojure.ch05)]
+    (map #(symbol namespace %) cmd)))
 
 (defn allowed-command? [sexp]
   (let [cmd (first sexp)]
