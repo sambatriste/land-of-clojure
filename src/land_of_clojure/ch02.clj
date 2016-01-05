@@ -21,6 +21,7 @@
 
 (defn start-over []
   "初期値を設定する"
-  (reset! small (atom 1))
-  (reset! big (atom 100))
+  (reset! small 1)   ;; ここは(reset! small (atom 1))ではない
+  (reset! big 100)
   (guess-my-number))
+
