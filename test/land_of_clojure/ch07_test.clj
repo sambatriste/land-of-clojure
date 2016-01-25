@@ -19,30 +19,21 @@
 (deftest dot-label-test
   (is (= (dot-label 'abc) "abc"))
   (is (= (dot-label '[abc def]) "abc def"))
-  (is (nil? (dot-label nil))))
+  (is (nil? (dot-la
 
 
-(deftest nodes->dot-test
-  (is (= (nodes->dot land-of-clojure.ch05/*nodes*) nil)))
+(deftest nodes->dot5/*nodes*) nil)))
 
 
 (deftest edges->dot-test
-  (is (= (edges->dot land-of-clojure.ch05/*edges*) nil)))
-
+  (is (= (edges->do
 (doseq [edge land-of-clojure.ch05/*edges*]
-  ;; (print "*")
-  ;;(println edge)
   (let [from (first edge)
         dests (rest edge)]
-    
-    (doseq [dest dests]
+    (doseq [dest dests] ;; カッコが１こ余計にあるのではずす
       (doseq [e dest]
-        (print from "-> ")
-        (let [to (first e)
-              label (rest e)
-              s (str to "=\"" label "\"")]
-             (println s))
-     ))))
+        (print from
+              label)]
+             (pri
 
 
-(println land-of-clojure.ch05/*edges*)
