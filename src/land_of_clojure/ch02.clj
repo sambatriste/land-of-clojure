@@ -1,6 +1,6 @@
 (ns land-of-clojure.ch02)
 
-;; clojureでは再代入ができないのでatomを使用する
+;; clojureでは、defparameterがないのでatomを使用する
 (def small (atom 1))
 (def big (atom 100))
 
