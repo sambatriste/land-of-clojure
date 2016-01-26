@@ -1,3 +1,4 @@
+;; -*- coding: utf-8-unix -*-
 (ns land-of-clojure.ch05)
 
 (defn find-first [pred col]
@@ -29,6 +30,7 @@
                                 (chain garden)
                                 (frog garden)))
 
+;; オブジェクトとその配置場所
 (def ^:dynamic *object-locations* (atom initial-object-location))
 
 (defn current-object-locations [] (deref *object-locations*))
@@ -55,6 +57,7 @@
     (map describe-obj (objects-at loc objs obj-loc))))
 
 (defn- current-location []
+  "現在位置"
   (deref *location*))
 (defn look []
   (let [loc (current-location)]

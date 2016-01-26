@@ -1,27 +1,28 @@
+;; -*- coding: utf-8-unix -*-
 (ns land-of-clojure.ch02)
 
-;; clojure¤Ç¤Ï¡¢defparameter¤¬¤Ê¤¤¤Î¤Çatom¤ò»ÈÍÑ¤¹¤ë
+;; clojureã§ã¯å†ä»£å…¥ãŒã§ããªã„ã®ã§atomã‚’ä½¿ç”¨ã™ã‚‹
 (def small (atom 1))
 (def big (atom 100))
 
 (defn guess-my-number []
-  ;; atom¤ÎÃÍ¤Ë¤Ï@¤Ç¥¢¥¯¥»¥¹¤Ç¤­¤ë¡£ (deref small)¤ÈÆ±¤¸¡£
-  ;; ash´Ø¿ô¤½¤Î¤â¤Î¤Ïclojure¤Ë¤Ê¤¤¤Î¤Ç¡¢quot¤ÇÂåÂØ¤¹¤ë¡£
+  ;; atomã®å€¤ã«ã¯@ã§ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã€‚ (deref small)ã¨åŒã˜ã€‚
+  ;; ashé–¢æ•°ãã®ã‚‚ã®ã¯clojureã«ãªã„ã®ã§ã€quotã§ä»£æ›¿ã™ã‚‹ã€‚
   (quot (+ @small @big) 2))
 
 (defn smaller []
-  ;; reset!¤ÇÃÍ¤òÇË²õÅª¤ËÊÑ¹¹¤¹¤ë
+  ;; reset!ã§å€¤ã‚’ç ´å£Šçš„ã«å¤‰æ›´ã™ã‚‹
   (reset! big (dec (guess-my-number)))
   (guess-my-number))
 
 (defn bigger []
-  ;; reset!¤ÇÃÍ¤òÇË²õÅª¤ËÊÑ¹¹¤¹¤ë
+  ;; reset!ã§å€¤ã‚’ç ´å£Šçš„ã«å¤‰æ›´ã™ã‚‹
   (reset! small (inc (guess-my-number)))
   (guess-my-number))
 
 (defn start-over []
-  "½é´üÃÍ¤òÀßÄê¤¹¤ë"
-  (reset! small 1)   ;; ¤³¤³¤Ï(reset! small (atom 1))¤Ç¤Ï¤Ê¤¤
+  "åˆæœŸå€¤ã‚’è¨­å®šã™ã‚‹"
+  (reset! small 1)   ;; ã“ã“ã¯(reset! small (atom 1))ã§ã¯ãªã„
   (reset! big 100)
   (guess-my-number))
 

@@ -1,3 +1,4 @@
+;; -*- coding: utf-8-unix -*-
 (ns land-of-clojure.ch06
   (:require [clojure.string :refer [upper-case lower-case split]]
             [land-of-clojure.ch05 :refer :all]
@@ -6,6 +7,7 @@
 (def ^:dynamic *allowed-commands* '(look walk pickup inventory))
 
 (defn exists? [e col]
+  "colのなかにeが存在するか？"
   (not (nil? (find-first #(= % e) col))))
 
 
